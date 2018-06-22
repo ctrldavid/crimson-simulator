@@ -9,7 +9,7 @@ module.exports = {
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "comma-dangle": "off",
         "guard-for-in": "off",
-        "indent": ["error", 4],
+        // "indent": ["error", 2],
         "linebreak-style": ["error", "unix"],
         "max-len": "off",
         "max-statements-per-line": ["error", { "max": 2 }],

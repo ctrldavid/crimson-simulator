@@ -59,3 +59,12 @@ typings/
 
 # next.js build output
 .next
+
+# lance.gg
+node_modules
+dist/bundle.js
+.idea/*
+yarn.lock
+yarn-error.log
+npm-debug.log
+*.trace
