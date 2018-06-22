@@ -120,7 +120,7 @@ export default class Ship extends DynamicObject {
     }
 
     steer() {
-        return;
+        // return;
         let closestTarget = null;
         let closestDistance2 = Infinity;
         for (let objId of Object.keys(this.gameEngine.world.objects)) {
