@@ -23,7 +23,8 @@ import MyGameEngine from './src/common/SpaaaceGameEngine.js';
 const gameEngine = new MyGameEngine();
 const serverEngine = new MyServerEngine(io, gameEngine, {
     debug: {},
-    updateRate: 6,
+    updateRate: 1,
+    stepRate: 60,
     timeoutInterval: 0 // no timeout
 });
 
