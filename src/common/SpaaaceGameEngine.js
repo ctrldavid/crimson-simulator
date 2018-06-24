@@ -60,7 +60,7 @@ export default class SpaaaceGameEngine extends GameEngine {
                 for (let j = i + 1; j < ships.length; j++) {
                     const a = ships[i];
                     const b = ships[j];
-                    a.r=30; b.r=30;
+                    a.r=25; b.r=25;
                     a.mass = 1; b.mass = 1;
 
                     const distance = Math.hypot(a.x-b.x, a.y-b.y);
@@ -92,16 +92,27 @@ export default class SpaaaceGameEngine extends GameEngine {
                     b.velocity.x -= propB * vdiff(xb, xa)[0];
                     b.velocity.y -= propB * vdiff(xb, xa)[1];
 
-                    a.position.x += a.velocity.x;
-                    a.position.y += a.velocity.y;
-                    b.position.x += b.velocity.x;
-                    b.position.y += b.velocity.y;
+                    // Extra bouncy
+                    a.velocity.x *= 1.1;
+                    a.velocity.y *= 1.1;
+                    b.velocity.x *= 1.1;
+                    b.velocity.y *= 1.1;
+
+                    // Now we move them apart so they don't immediately recollide.
+                    // const diff = [a.position.x - b.position.x, a.position.y - b.position.y];
+                    const angle = Math.atan2(a.position.x - b.position.x, a.position.y - b.position.y);
+                    a.position.x = b.position.x + (a.r + b.r+1) * Math.sin(angle);
+                    a.position.y = b.position.y + (a.r + b.r+1) * Math.cos(angle);
+                    // a.position.x += a.velocity.x;
+                    // a.position.y += a.velocity.y;
+                    // b.position.x += b.velocity.x;
+                    // b.position.y += b.velocity.y;
                     // console.log(propA, propB, vdiff(xa, xb).x);
                 }
             }
             for (let k = 0; k < ships.length - 1; k++) {
-                ships[k].velocity.x *= 0.98;
-                ships[k].velocity.y *= 0.98;
+                ships[k].velocity.x *= 0.99;
+                ships[k].velocity.y *= 0.99;
             }
         });
         this.on('postStep', this.reduceVisibleThrust.bind(this));
@@ -119,13 +130,18 @@ export default class SpaaaceGameEngine extends GameEngine {
 
         if (playerShip) {
             if (inputData.input == 'up') {
-                playerShip.isAccelerating = true;
-                playerShip.showThrust = 5; // show thrust for next steps.
-            } else if (inputData.input == 'right') {
-                playerShip.isRotatingRight = true;
-            } else if (inputData.input == 'left') {
-                playerShip.isRotatingLeft = true;
-            } else if (inputData.input == 'space') {
+                playerShip.velocity.y -= 0.25;
+            }
+            if (inputData.input == 'down') {
+                playerShip.velocity.y += 0.25;
+            }
+            if (inputData.input == 'left') {
+                playerShip.velocity.x -= 0.25;
+            }
+            if (inputData.input == 'right') {
+                playerShip.velocity.x += 0.25;
+            }
+            if (inputData.input == 'space') {
                 this.makeMissile(playerShip, inputData.messageIndex);
                 this.emit('fireMissile');
             }

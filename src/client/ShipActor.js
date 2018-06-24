@@ -22,7 +22,7 @@ class ShipActor{
 
         this.shipSprite.anchor.set(0.5, 0.5);
         this.shipSprite.width = 50;
-        this.shipSprite.height = 45;
+        this.shipSprite.height = 50;
 
 
         this.addThrustEmitter();

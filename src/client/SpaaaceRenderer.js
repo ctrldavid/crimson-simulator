@@ -15,7 +15,7 @@ export default class SpaaaceRenderer extends Renderer {
 
     get ASSETPATHS(){
         return {
-            ship: 'assets/ship1.png',
+            ship: 'assets/circle.png',
             missile: 'assets/shot.png',
             bg1: 'assets/space3.png',
             bg2: 'assets/space2.png',
@@ -262,8 +262,8 @@ export default class SpaaaceRenderer extends Renderer {
             }
         }
 
-        let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
-        let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
+        let bgOffsetX = 0;//this.bgPhaseX * worldWidth + this.camera.x;
+        let bgOffsetY = 0;//this.bgPhaseY * worldHeight + this.camera.y;
 
         this.bg1.tilePosition.x = bgOffsetX * 0.01;
         this.bg1.tilePosition.y = bgOffsetY * 0.01;

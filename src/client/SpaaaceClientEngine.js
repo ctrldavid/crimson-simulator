@@ -55,6 +55,7 @@ export default class SpaaaceClientEngine extends ClientEngine {
             this.controls.bindKey('left', 'left', { repeat: true });
             this.controls.bindKey('right', 'right', { repeat: true });
             this.controls.bindKey('up', 'up', { repeat: true } );
+            this.controls.bindKey('down', 'down', { repeat: true } );
             this.controls.bindKey('space', 'space');
 
             this.controls.on('fire', () => {

@@ -13,7 +13,7 @@ export default class Ship extends DynamicObject {
         this.height = 100;
     }
 
-    get maxSpeed() { return 3.0; }
+    get maxSpeed() { return 10.0; }
 
     onAddToWorld(gameEngine) {
         let renderer = Renderer.getInstance();
