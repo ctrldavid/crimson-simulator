@@ -25,10 +25,11 @@ export default class SpaaaceGameEngine extends GameEngine {
     }
 
     initWorld() {
+        // 2852 x 1532
         super.initWorld({
-            worldWrap: true,
-            width: 3000,
-            height: 3000
+            worldWrap: false,
+            width: 2852,
+            height: 1532
         });
     }
 
@@ -110,9 +111,33 @@ export default class SpaaaceGameEngine extends GameEngine {
                     // console.log(propA, propB, vdiff(xa, xb).x);
                 }
             }
-            for (let k = 0; k < ships.length - 1; k++) {
-                ships[k].velocity.x *= 0.99;
-                ships[k].velocity.y *= 0.99;
+            // bounce off walls
+            let worldWidth = this.worldSettings.width;
+            let worldHeight = this.worldSettings.height;
+
+            for (let i = 0; i < ships.length; i++) {
+                const ship = ships[i];
+                if (ship.position.x < 0) {
+                    ship.velocity.x *= -1;
+                    ship.position.x = 0;
+                }
+                if (ship.position.x > worldWidth) {
+                    ship.velocity.x *= -1;
+                    ship.position.x = worldWidth;
+                }
+                if (ship.position.y < 0) {
+                    ship.velocity.y *= -1;
+                    ship.position.y = 0;
+                }
+                if (ship.position.y > worldHeight) {
+                    ship.velocity.y *= -1;
+                    ship.position.y = worldHeight;
+                }
+            }
+
+            for (let k = 0; k < ships.length; k++) {
+                ships[k].velocity.x *= 0.98;
+                ships[k].velocity.y *= 0.98;
             }
         });
         this.on('postStep', this.reduceVisibleThrust.bind(this));

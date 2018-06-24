@@ -25,7 +25,7 @@ const serverEngine = new MyServerEngine(io, gameEngine, {
     debug: {},
     updateRate: 1,
     stepRate: 60,
-    timeoutInterval: 0 // no timeout
+    timeoutInterval: 0 // 0 = no timeout
 });
 
 // start the game

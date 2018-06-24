@@ -6,15 +6,18 @@ const Utils = require('../common/Utils');
  */
 class MobileControls{
 
-    constructor(renderer){
+    constructor(clientEngine){
         Object.assign(this, EventEmitter.prototype);
-        this.renderer = renderer;
+        this.inputPulser = 0;
+        this.renderer = clientEngine.renderer;
+        this.clientEngine = clientEngine;
 
-        this.touchContainer = document.querySelector(".pixiContainer");
+        this.touchContainer = window; // document.querySelector(".pixiContainer");
         this.setupListeners();
 
         this.activeInput = {
             up: false,
+            down: false,
             left: false,
             right: false
         };
@@ -52,6 +55,7 @@ class MobileControls{
         }, false);
 
         this.touchContainer.addEventListener('touchend', (e) => {
+            // alert('end');
             this.currentTouch = false;
             this.activeInput.up = false;
             this.activeInput.left = false;
@@ -68,40 +72,61 @@ class MobileControls{
         // no touch, no movement
         if (!this.currentTouch) return;
 
-        // by default no touch
-        this.activeInput.right = false;
-        this.activeInput.left = false;
-        this.activeInput.up = false;
+        this.inputPulser = (this.inputPulser + 1) % 100000;
 
-        let playerShip = this.renderer.playerShip;
-        // no player ship, no movement
-        if (!playerShip) return;
+        // alert(JSON.stringify(this.currentTouch));
 
-        let playerShipScreenCoords = this.renderer.gameCoordsToScreen(playerShip);
+        // // by default no touch
+        // this.activeInput.right = false;
+        // this.activeInput.left = false;
+        // this.activeInput.up = false;
 
-        let dx = this.currentTouch.x - playerShipScreenCoords.x;
-        let dy = this.currentTouch.y - playerShipScreenCoords.y;
-        let shortestArc = Utils.shortestArc(Math.atan2(dx, -dy),
-            Math.atan2(Math.sin(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2), Math.cos(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2)));
 
-        let rotateThreshold = 0.3;
-        let distanceThreshold = 120;
 
-        // turn left or right
-        if (shortestArc > rotateThreshold){
-            this.activeInput.left = true;
-            this.activeInput.right = false;
-        } else if (shortestArc < -rotateThreshold) {
-            this.activeInput.right = true;
-            this.activeInput.left = false;
-        }
+        // let dx = this.currentTouch.x - playerShipScreenCoords.x;
+        // let dy = this.currentTouch.y - playerShipScreenCoords.y;
+        // let shortestArc = Utils.shortestArc(Math.atan2(dx, -dy),
+        //     Math.atan2(Math.sin(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2), Math.cos(playerShip.actor.shipContainerSprite.rotation + Math.PI / 2)));
 
-        // don't turn if too close
-        if (Math.sqrt(dx * dx + dy * dy) > distanceThreshold) {
-            this.activeInput.up = true;
-            this.renderer.onKeyChange({ keyName: 'up', isDown: true });
-        } else {
-            this.renderer.onKeyChange({ keyName: 'up', isDown: false });
+        // let rotateThreshold = 0.3;
+        // let distanceThreshold = 120;
+
+        // // turn left or right
+        // if (shortestArc > rotateThreshold){
+        //     this.activeInput.left = true;
+        //     this.activeInput.right = false;
+        // } else if (shortestArc < -rotateThreshold) {
+        //     this.activeInput.right = true;
+        //     this.activeInput.left = false;
+        // }
+
+        // // don't turn if too close
+        // if (Math.sqrt(dx * dx + dy * dy) > distanceThreshold) {
+        //     this.activeInput.up = true;
+        //     this.renderer.onKeyChange({ keyName: 'up', isDown: true });
+        // } else {
+        //     this.renderer.onKeyChange({ keyName: 'up', isDown: false });
+        // }
+        try {
+            let playerShip = this.renderer.playerShip;
+            // no player ship, no movement
+            if (!playerShip) return;
+
+            let playerShipScreenCoords = this.renderer.gameCoordsToScreen(playerShip);
+
+            let dx = this.currentTouch.x - playerShipScreenCoords.x;
+            let dy = this.currentTouch.y - playerShipScreenCoords.y;
+            this.activeInput.left = (dx < -10);
+            this.activeInput.right = (dx > 10);
+            this.activeInput.up = (dy < -10);
+            this.activeInput.down = (dy > 10);
+
+            if (this.activeInput.left) { this.clientEngine.sendInput('left'); }
+            if (this.activeInput.right) { this.clientEngine.sendInput('right'); }
+            if (this.activeInput.up) { this.clientEngine.sendInput('up'); }
+            if (this.activeInput.down) { this.clientEngine.sendInput('down'); }
+        } catch (e) {
+            alert(e);
         }
 
     }

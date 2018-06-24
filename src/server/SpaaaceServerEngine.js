@@ -2,7 +2,7 @@
 
 import ServerEngine from 'lance/ServerEngine';
 const nameGenerator = require('./NameGenerator');
-const NUM_BOTS = 3;
+const NUM_BOTS = 0;
 
 export default class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {

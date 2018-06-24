@@ -17,7 +17,9 @@ export default class SpaaaceRenderer extends Renderer {
         return {
             ship: 'assets/circle.png',
             missile: 'assets/shot.png',
-            bg1: 'assets/space3.png',
+            level: 'assets/level1.png',
+            bg1: 'assets/level1.png',
+            // bg1: 'assets/space3.png',
             bg2: 'assets/space2.png',
             bg3: 'assets/clouds2.png',
             bg4: 'assets/clouds1.png',
@@ -216,7 +218,7 @@ export default class SpaaaceRenderer extends Renderer {
         let cameraTarget;
         if (this.playerShip) {
             cameraTarget = this.playerShip;
-            // this.cameraRoam = false;
+            this.cameraRoam = false;
         } else if (!this.gameStarted && !cameraTarget) {
 
             // calculate centroid
@@ -258,15 +260,22 @@ export default class SpaaaceRenderer extends Renderer {
                 this.centerCamera(cameraTempTargetX, cameraTempTargetY);
 
             } else {
+                // Offset slightly for movement
+                if (window && (!window.pants || window.pants < 100)) {
+                    console.log(cameraTarget);
+                    window.pants = (window.pants || 0) + 1;
+                }
                 this.centerCamera(cameraTarget.x, cameraTarget.y);
             }
         }
 
-        let bgOffsetX = 0;//this.bgPhaseX * worldWidth + this.camera.x;
-        let bgOffsetY = 0;//this.bgPhaseY * worldHeight + this.camera.y;
+        // this.centerCamera(worldWidth/2, worldHeight/2);
 
-        this.bg1.tilePosition.x = bgOffsetX * 0.01;
-        this.bg1.tilePosition.y = bgOffsetY * 0.01;
+        let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+        let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
+
+        this.bg1.tilePosition.x = this.camera.x;
+        this.bg1.tilePosition.y = this.camera.y;
 
         this.bg2.tilePosition.x = bgOffsetX * 0.04;
         this.bg2.tilePosition.y = bgOffsetY * 0.04;

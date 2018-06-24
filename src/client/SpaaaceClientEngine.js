@@ -46,12 +46,12 @@ export default class SpaaaceClientEngine extends ClientEngine {
 
             //  Game input
             if (Utils.isTouchDevice()){
-                this.controls = new MobileControls(this.renderer);
+                this.controls = new MobileControls(this);
             } else {
-                this.controls = new KeyboardControls(this.renderer);
+                this.controls = new KeyboardControls(this);
             }
 
-            this.controls = new KeyboardControls(this);
+            //this.controls = new KeyboardControls(this);
             this.controls.bindKey('left', 'left', { repeat: true });
             this.controls.bindKey('right', 'right', { repeat: true });
             this.controls.bindKey('up', 'up', { repeat: true } );
