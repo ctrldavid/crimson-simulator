@@ -4,6 +4,7 @@ import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
 import GameEngine from 'lance/GameEngine';
 import Ship from './Ship';
 import Missile from './Missile';
+import Student from './student';
 import TwoVector from 'lance/serialize/TwoVector';
 
 export default class SpaaaceGameEngine extends GameEngine {
@@ -22,6 +23,7 @@ export default class SpaaaceGameEngine extends GameEngine {
     registerClasses(serializer) {
         serializer.registerClass(Ship);
         serializer.registerClass(Missile);
+        serializer.registerClass(Student);
     }
 
     initWorld() {
@@ -38,7 +40,17 @@ export default class SpaaaceGameEngine extends GameEngine {
 
         this.on('collisionStart', e => {
             let collisionObjects = Object.keys(e).map(k => e[k]);
-            let ships = collisionObjects.filter(o => o instanceof Ship);
+            // let ships = collisionObjects.filter(o => o instanceof Ship);
+            let ship = collisionObjects.find(o => o instanceof Ship);
+            let student = collisionObjects.find(o => o instanceof Student);
+
+
+            if (!ship || !student)
+                return;
+
+            this.trace.info(() => `student pickup by ship=${ship.playerId}`);
+            this.emit('studentPickup', { student, ship });
+
             // let missile = collisionObjects.find(o => o instanceof Missile);
 
 
@@ -264,6 +276,38 @@ export default class SpaaaceGameEngine extends GameEngine {
         }
     }
 
+    makeStudent() {
+        let studentX = 0;
+        let studentY = 0;
+        for (let attempts = 1000; attempts > 0; attempts--) {
+            studentX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
+            studentY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
+            // Check the map to see if spawn point is valid
+            const pixel = this.ctx.getImageData(0|studentX, 0|studentY, 1, 1).data;
+            if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+                break;
+            }
+        }
+
+        let student = new Student(this, null, {
+            position: new TwoVector(studentX, studentY),
+        });
+        // missile.velocity.copy(playerShip.velocity);
+
+        let obj = this.addObjectToWorld(student);
+
+        // if the object was added successfully to the game world, destroy the missile after some game ticks
+        // if (obj)
+        //     this.timer.add(30, this.destroyMissile, this, [obj.id]);
+
+        return student;
+    }
+    destroyStudent(studentId) {
+        if (this.world.objects[studentId]) {
+            this.trace.trace(() => `studentId[${studentId}] destroyed`);
+            this.removeObjectFromWorld(studentId);
+        }
+    }
     // at the end of the step, reduce the thrust for all objects
     reduceVisibleThrust(postStepEv) {
         if (postStepEv.isReenact)

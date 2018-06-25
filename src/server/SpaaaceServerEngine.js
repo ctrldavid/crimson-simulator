@@ -3,6 +3,7 @@
 import ServerEngine from 'lance/ServerEngine';
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 0;
+const NUM_STUDENTS = 10;
 
 export default class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
@@ -14,6 +15,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
         super.start();
 
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
+        for (let x = 0; x < NUM_STUDENTS; x++) this.gameEngine.makeStudent();
 
         this.gameEngine.on('shipdied', (e) => {
             // this.gameEngine.removeObjectFromWorld(e.ship.id);
@@ -23,6 +25,19 @@ export default class SpaaaceServerEngine extends ServerEngine {
                 this.updateScore();
             }
             this.gameEngine.spawnShip(e.ship.playerId);
+        });
+
+
+        this.gameEngine.on('studentPickup', (e) => {
+            // this.gameEngine.removeObjectFromWorld(e.ship.id);
+            // this.gameEngine.makeShip(e.ship.playerId);
+            if (this.scoreData[e.ship.id]) {
+                this.scoreData[e.ship.id].kills++;
+                this.updateScore();
+            }
+            this.gameEngine.destroyStudent(e.student.id);
+            this.gameEngine.makeStudent();
+            // this.gameEngine.spawnShip(e.ship.playerId);
         });
 
         this.gameEngine.on('missileHit', e => {

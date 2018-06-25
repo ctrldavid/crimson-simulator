@@ -6,6 +6,7 @@ import Utils from './../common/Utils';
 
 import Missile from '../common/Missile';
 import Ship from '../common/Ship';
+import Student from '../common/student';
 
 
 /**
@@ -17,6 +18,7 @@ export default class SpaaaceRenderer extends Renderer {
         return {
             ship: 'assets/circle.png',
             missile: 'assets/shot.png',
+            student: 'assets/student.png',
             level: 'assets/level1.png',
             bg1: 'assets/level1.png',
             // bg1: 'assets/space3.png',
@@ -188,6 +190,10 @@ export default class SpaaaceRenderer extends Renderer {
                     sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                 } else{
                     sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                }
+
+                if (objData instanceof Student) {
+                    sprite.rotation = 0;
                 }
 
                 // make the wraparound seamless for objects other than the player ship
