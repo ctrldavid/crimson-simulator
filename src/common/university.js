@@ -19,7 +19,7 @@ export default class University extends DynamicObject {
     onAddToWorld(gameEngine) {
         let renderer = Renderer.getInstance();
         if (renderer) {
-            let sprite = new PIXI.Sprite(PIXI.loader.resources.student.texture);
+            let sprite = new PIXI.Sprite(PIXI.loader.resources.university.texture);
             renderer.sprites[this.id] = sprite;
             sprite.width = 120 * 0.5;
             sprite.height = 120 * 0.5;

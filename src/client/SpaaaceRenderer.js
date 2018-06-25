@@ -20,6 +20,7 @@ export default class SpaaaceRenderer extends Renderer {
             ship: 'assets/circle.png',
             missile: 'assets/shot.png',
             student: 'assets/student.png',
+            university: 'assets/university.png',
             level: 'assets/level1.png',
             bg1: 'assets/level1.png',
             // bg1: 'assets/space3.png',
