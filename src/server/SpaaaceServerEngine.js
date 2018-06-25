@@ -15,6 +15,11 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
 
+        this.gameEngine.on('shipdied', e => {
+            console.log(`ship killed: ${e.ship.toString()}`);
+            this.gameEngine.removeObjectFromWorld(e.ship.id);
+        });
+
         this.gameEngine.on('missileHit', e => {
             // add kills
             if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;

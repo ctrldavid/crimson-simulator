@@ -6,7 +6,6 @@ import Ship from './Ship';
 import Missile from './Missile';
 import TwoVector from 'lance/serialize/TwoVector';
 
-
 export default class SpaaaceGameEngine extends GameEngine {
 
     constructor(options) {
@@ -17,6 +16,7 @@ export default class SpaaaceGameEngine extends GameEngine {
                 type: 'brute'
             }
         });
+        this.ctx = options.ctx;
     }
 
     registerClasses(serializer) {
@@ -139,8 +139,21 @@ export default class SpaaaceGameEngine extends GameEngine {
                 ships[k].velocity.x *= 0.98;
                 ships[k].velocity.y *= 0.98;
             }
+
+            // Check death
+            if (!this.ctx) { return; }
+            for (let i = 0; i < ships.length; i++) {
+                const ship = ships[i];
+
+                const pixel = this.ctx.getImageData(0|ship.position.x, 0|ship.position.y, 1, 1).data;
+                if (pixel[0] === 0 && pixel[1] === 0 && pixel[2] === 0) {
+                    this.emit('shipdied', { ship });
+                }
+                // console.log(pixel);
+            }
+
         });
-        this.on('postStep', this.reduceVisibleThrust.bind(this));
+        // this.on('postStep', this.reduceVisibleThrust.bind(this));
     };
 
     processInput(inputData, playerId, isServer) {
@@ -175,9 +188,17 @@ export default class SpaaaceGameEngine extends GameEngine {
 
     // Makes a new ship, places it randomly and adds it to the game world
     makeShip(playerId) {
-        let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
-        let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
-
+        let newShipX;
+        let newShipY;
+        for (let attempts = 1000; attempts > 0; attempts--) {
+            newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
+            newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
+            // Check the map to see if spawn point is valid
+            const pixel = this.ctx.getImageData(0|newShipX, 0|newShipY, 1, 1).data;
+            if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+                break;
+            }
+        }
         let ship = new Ship(this, null, {
             position: new TwoVector(newShipX, newShipY)
         });
@@ -190,6 +211,7 @@ export default class SpaaaceGameEngine extends GameEngine {
     };
 
     makeMissile(playerShip, inputId) {
+        return;
         let missile = new Missile(this);
 
         // we want the missile location and velocity to correspond to that of the ship firing it

@@ -31,18 +31,18 @@ class ShipActor{
     }
 
     renderStep(delta){
-        if (this.thrustEmitter) {
-            this.thrustEmitter.update(delta * 0.001);
+        // if (this.thrustEmitter) {
+        //     this.thrustEmitter.update(delta * 0.001);
 
-            this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.shipContainerSprite.rotation) * 4;
-            this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.shipContainerSprite.rotation) * 4;
+        //     this.thrustEmitter.spawnPos.x = this.sprite.x - Math.cos(-this.shipContainerSprite.rotation) * 4;
+        //     this.thrustEmitter.spawnPos.y = this.sprite.y + Math.sin(-this.shipContainerSprite.rotation) * 4;
 
-            this.thrustEmitter.minStartRotation = this.shipContainerSprite.rotation * 180 / Math.PI + 180 - 1;
-            this.thrustEmitter.maxStartRotation = this.shipContainerSprite.rotation * 180 / Math.PI + 180 + 1;
-        }
-        if (this.explosionEmitter){
-            this.explosionEmitter.update(delta * 0.001);
-        }
+        //     this.thrustEmitter.minStartRotation = this.shipContainerSprite.rotation * 180 / Math.PI + 180 - 1;
+        //     this.thrustEmitter.maxStartRotation = this.shipContainerSprite.rotation * 180 / Math.PI + 180 + 1;
+        // }
+        // if (this.explosionEmitter){
+        //     this.explosionEmitter.update(delta * 0.001);
+        // }
 
     }
 

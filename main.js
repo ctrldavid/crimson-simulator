@@ -4,6 +4,11 @@ const express = require('express');
 const socketIO = require('socket.io');
 const path = require('path');
 
+// canvas stuff
+const { createCanvas, loadImage } = require('canvas');
+const canvas = createCanvas(2852, 1532);
+const ctx = canvas.getContext('2d');
+
 const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, './index.html');
 
@@ -19,14 +24,20 @@ import MyServerEngine from './src/server/SpaaaceServerEngine.js';
 import MyGameEngine from './src/common/SpaaaceGameEngine.js';
 
 
-// Game Instances
-const gameEngine = new MyGameEngine();
-const serverEngine = new MyServerEngine(io, gameEngine, {
-    debug: {},
-    updateRate: 1,
-    stepRate: 60,
-    timeoutInterval: 0 // 0 = no timeout
-});
+loadImage('assets/level1.png').then((image) => {
+  ctx.drawImage(image, 0, 0, 2852, 1532);
 
-// start the game
-serverEngine.start();
+  // console.log('<img src="' + canvas.toDataURL() + '" />');
+
+  // Game Instances
+  const gameEngine = new MyGameEngine({ ctx: ctx });
+  const serverEngine = new MyServerEngine(io, gameEngine, {
+      debug: {},
+      updateRate: 1,
+      stepRate: 60,
+      timeoutInterval: 0 // 0 = no timeout
+  });
+
+  // start the game
+  serverEngine.start();
+});
