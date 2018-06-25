@@ -21,8 +21,8 @@ class ShipActor{
 
 
         this.shipSprite.anchor.set(0.5, 0.5);
-        this.shipSprite.width = 50;
-        this.shipSprite.height = 50;
+        this.shipSprite.width = 80;
+        this.shipSprite.height = 80;
 
 
         this.addThrustEmitter();
@@ -63,15 +63,26 @@ class ShipActor{
         this.explosionEmitter.emit = false;
     }
 
-    changeName(name){
-        if (this.nameText != null){
+    changeName(name, score){
+        if (this.nameText != null) {
             this.nameText.destroy();
         }
-        this.nameText = new PIXI.Text(name, { fontFamily: 'arial', fontSize: '12px', fill: 'white' });
+        this.nameText = new PIXI.Text(`${name} score: ${score}`, { fontFamily: 'arial', fontSize: '12px', fill: 'black' });
         this.nameText.anchor.set(0.5, 0.5);
-        this.nameText.y = -40;
-        this.nameText.alpha = 0.3;
+        this.nameText.y = -38;
+        this.nameText.alpha = 1.0;
         this.sprite.addChild(this.nameText);
+    }
+
+    changeStudentCount(count) {
+        if (this.countText != null) {
+            this.countText.destroy();
+        }
+        this.countText = new PIXI.Text(`carrying ${count}`, { fontFamily: 'arial', fontSize: `${12 + count/2}px`, fill: 'black' });
+        this.countText.anchor.set(0.5, 0.5);
+        this.countText.y = 36;
+        this.countText.alpha = 1.0;
+        this.sprite.addChild(this.countText);
     }
 
     destroy() {

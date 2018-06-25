@@ -6,7 +6,7 @@ const path = require('path');
 
 // canvas stuff
 const { createCanvas, loadImage } = require('canvas');
-const canvas = createCanvas(2852, 1532);
+const canvas = createCanvas(5001, 3334);
 const ctx = canvas.getContext('2d');
 
 const PORT = process.env.PORT || 3000;
@@ -24,8 +24,8 @@ import MyServerEngine from './src/server/SpaaaceServerEngine.js';
 import MyGameEngine from './src/common/SpaaaceGameEngine.js';
 
 
-loadImage('assets/level1.png').then((image) => {
-  ctx.drawImage(image, 0, 0, 2852, 1532);
+loadImage('assets/k-map-mask.png').then((image) => {
+  ctx.drawImage(image, 0, 0, 5001, 3334);
 
   // console.log('<img src="' + canvas.toDataURL() + '" />');
 

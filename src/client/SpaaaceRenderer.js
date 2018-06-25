@@ -17,12 +17,12 @@ export default class SpaaaceRenderer extends Renderer {
 
     get ASSETPATHS(){
         return {
-            ship: 'assets/circle.png',
+            ship: 'assets/k-player.png',
             missile: 'assets/shot.png',
-            student: 'assets/student.png',
-            university: 'assets/university.png',
-            level: 'assets/level1.png',
-            bg1: 'assets/level1.png',
+            student: 'assets/k-stu.png',
+            university: 'assets/k-uni.png',
+            level: 'assets/k-map-mask.png',
+            bg1: 'assets/k-map-mask.png',
             // bg1: 'assets/space3.png',
             bg2: 'assets/space2.png',
             bg3: 'assets/clouds2.png',
@@ -189,7 +189,8 @@ export default class SpaaaceRenderer extends Renderer {
                 sprite.y = objData.position.y;
 
                 if (objData instanceof Ship){
-                    sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                    //sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                    sprite.actor.shipContainerSprite.rotation = 0;
                 } else{
                     sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                 }
@@ -302,7 +303,7 @@ export default class SpaaaceRenderer extends Renderer {
 
     addPlayerShip(sprite) {
         this.playerShip = sprite;
-        sprite.actor.shipSprite.tint = 0XFF00FF; // color  player ship
+        sprite.actor.shipSprite.tint = 0XFFFFFF; // color  player ship
         document.body.classList.remove('lostGame');
         if (!document.body.classList.contains('tutorialDone')){
             document.body.classList.add('tutorial');
@@ -426,8 +427,10 @@ export default class SpaaaceRenderer extends Renderer {
             }
 
             // stupid string/number conversion
-            if (this.sprites[parseInt(id)])
-                this.sprites[parseInt(id)].actor.changeName(data[id].name);
+            if (this.sprites[parseInt(id)]) {
+                this.sprites[parseInt(id)].actor.changeName(data[id].name, data[id].kills);
+                this.sprites[parseInt(id)].actor.changeStudentCount(data[id].students);
+            }
 
             scoreEl.innerHTML = `${data[id].name}: ${data[id].kills}`;
 
@@ -439,7 +442,7 @@ export default class SpaaaceRenderer extends Renderer {
 
         scoreArray.sort((a, b) => {return a.data.kills < b.data.kills;});
 
-        for (let x=0; x < scoreArray.length; x++){
+        for (let x=0; x < scoreArray.length; x++) {
             scoreArray[x].el.style.transform = `translateY(${x}rem)`;
         }
 

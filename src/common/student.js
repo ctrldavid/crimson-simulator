@@ -21,8 +21,8 @@ export default class Student extends DynamicObject {
         if (renderer) {
             let sprite = new PIXI.Sprite(PIXI.loader.resources.student.texture);
             renderer.sprites[this.id] = sprite;
-            sprite.width = 40 * 0.5;
-            sprite.height = 40 * 0.5;
+            sprite.width = 70;
+            sprite.height = 70;
             sprite.anchor.set(0.5, 0.5);
             sprite.position.set(this.position.x, this.position.y);
             renderer.layer2.addChild(sprite);

@@ -32,8 +32,8 @@ export default class SpaaaceGameEngine extends GameEngine {
         // 2852 x 1532
         super.initWorld({
             worldWrap: false,
-            width: 2852,
-            height: 1532
+            width: 5001,
+            height: 3334,
         });
     }
 
@@ -163,6 +163,9 @@ export default class SpaaaceGameEngine extends GameEngine {
                 const ship = ships[i];
 
                 const pixel = this.ctx.getImageData(0|ship.position.x, 0|ship.position.y, 1, 1).data;
+                // White: 255,255,255,255
+                // Orange: 221, 166, 94
+                // Blue: 97,186, 207
                 if (pixel[0] === 0 && pixel[1] === 0 && pixel[2] === 0) {
                     this.emit('shipdied', { ship });
                 }
@@ -238,7 +241,7 @@ export default class SpaaaceGameEngine extends GameEngine {
             newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
             // Check the map to see if spawn point is valid
             const pixel = this.ctx.getImageData(0|newShipX, 0|newShipY, 1, 1).data;
-            if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+            if (pixel[0] !== 0 && pixel[1] !== 0 && pixel[2] !== 0) {
                 break;
             }
         }
@@ -289,7 +292,10 @@ export default class SpaaaceGameEngine extends GameEngine {
             studentY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
             // Check the map to see if spawn point is valid
             const pixel = this.ctx.getImageData(0|studentX, 0|studentY, 1, 1).data;
-            if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+                // White: 255,255,255,255
+                // Orange: 221, 166, 94
+                // Blue: 97,186, 207
+            if (pixel[0] === 221 && pixel[1] === 166 && pixel[2] === 94) {
                 break;
             }
         }
@@ -321,7 +327,10 @@ export default class SpaaaceGameEngine extends GameEngine {
             universityY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
             // Check the map to see if spawn point is valid
             const pixel = this.ctx.getImageData(0|universityX, 0|universityY, 1, 1).data;
-            if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+                // White: 255,255,255,255
+                // Orange: 221, 166, 94
+                // Blue: 97,186, 207
+            if (pixel[0] === 97 && pixel[1] === 186 && pixel[2] === 207) {
                 break;
             }
         }
