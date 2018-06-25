@@ -188,8 +188,34 @@ export default class SpaaaceGameEngine extends GameEngine {
 
     // Makes a new ship, places it randomly and adds it to the game world
     makeShip(playerId) {
-        let newShipX;
-        let newShipY;
+        let newShipX = 0;
+        let newShipY = 0;
+        // for (let attempts = 1000; attempts > 0; attempts--) {
+        //     newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
+        //     newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
+        //     // Check the map to see if spawn point is valid
+        //     const pixel = this.ctx.getImageData(0|newShipX, 0|newShipY, 1, 1).data;
+        //     if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+        //         break;
+        //     }
+        // }
+        let ship = new Ship(this, null, {
+            position: new TwoVector(newShipX, newShipY)
+        });
+        ship.playerId = playerId;
+        this.addObjectToWorld(ship);
+        console.log(`ship added: ${ship.toString()}`);
+        this.spawnShip(playerId);
+        return ship;
+    };
+
+    spawnShip(playerId) {
+        let ships = this.world.queryObjects({
+            instanceType: Ship
+        });
+        let ship = ships.find((s) => s.playerId === playerId);
+        let newShipX = 0;
+        let newShipY = 0;
         for (let attempts = 1000; attempts > 0; attempts--) {
             newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
             newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
@@ -199,16 +225,11 @@ export default class SpaaaceGameEngine extends GameEngine {
                 break;
             }
         }
-        let ship = new Ship(this, null, {
-            position: new TwoVector(newShipX, newShipY)
-        });
-
-        ship.playerId = playerId;
-        this.addObjectToWorld(ship);
-        console.log(`ship added: ${ship.toString()}`);
-
-        return ship;
-    };
+        ship.position.x = newShipX;
+        ship.position.y = newShipY;
+        ship.velocity.x = 0;
+        ship.velocity.y = 0;
+    }
 
     makeMissile(playerShip, inputId) {
         return;

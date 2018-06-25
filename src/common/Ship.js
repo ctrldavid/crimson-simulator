@@ -14,8 +14,11 @@ export default class Ship extends DynamicObject {
     }
 
     get maxSpeed() { return 10.0; }
+    get bendingMultiple() { return 0.8; }
+    get bendingVelocityMultiple() { return 1.0; }
 
     onAddToWorld(gameEngine) {
+        console.log('ON ADD TO WORLD');
         let renderer = Renderer.getInstance();
         if (renderer) {
             let shipActor = new ShipActor(renderer);

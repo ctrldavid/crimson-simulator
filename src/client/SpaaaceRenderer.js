@@ -261,10 +261,10 @@ export default class SpaaaceRenderer extends Renderer {
 
             } else {
                 // Offset slightly for movement
-                if (window && (!window.pants || window.pants < 100)) {
-                    console.log(cameraTarget);
-                    window.pants = (window.pants || 0) + 1;
-                }
+                // if (window && (!window.pants || window.pants < 100)) {
+                //     console.log(cameraTarget);
+                //     window.pants = (window.pants || 0) + 1;
+                // }
                 this.centerCamera(cameraTarget.x, cameraTarget.y);
             }
         }
