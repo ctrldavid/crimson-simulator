@@ -4,6 +4,7 @@ import ServerEngine from 'lance/ServerEngine';
 const nameGenerator = require('./NameGenerator');
 const NUM_BOTS = 0;
 const NUM_STUDENTS = 10;
+const NUM_UNIVERSITIES = 3;
 
 export default class SpaaaceServerEngine extends ServerEngine {
     constructor(io, gameEngine, inputOptions) {
@@ -16,12 +17,14 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
         for (let x = 0; x < NUM_STUDENTS; x++) this.gameEngine.makeStudent();
+        for (let x = 0; x < NUM_UNIVERSITIES; x++) this.gameEngine.makeUniversity();
 
         this.gameEngine.on('shipdied', (e) => {
             // this.gameEngine.removeObjectFromWorld(e.ship.id);
             // this.gameEngine.makeShip(e.ship.playerId);
             if (this.scoreData[e.ship.id]) {
-                this.scoreData[e.ship.id].kills--;
+                this.scoreData[e.ship.id].kills -= this.scoreData[e.ship.id].students;
+                this.scoreData[e.ship.id].students = 0;
                 this.updateScore();
             }
             this.gameEngine.spawnShip(e.ship.playerId);
@@ -32,12 +35,20 @@ export default class SpaaaceServerEngine extends ServerEngine {
             // this.gameEngine.removeObjectFromWorld(e.ship.id);
             // this.gameEngine.makeShip(e.ship.playerId);
             if (this.scoreData[e.ship.id]) {
-                this.scoreData[e.ship.id].kills++;
+                this.scoreData[e.ship.id].students++;
                 this.updateScore();
             }
             this.gameEngine.destroyStudent(e.student.id);
             this.gameEngine.makeStudent();
             // this.gameEngine.spawnShip(e.ship.playerId);
+        });
+
+        this.gameEngine.on('studentDropoff', (e) => {
+            if (this.scoreData[e.ship.id]) {
+                this.scoreData[e.ship.id].kills += this.scoreData[e.ship.id].students;
+                this.scoreData[e.ship.id].students = 0;
+                this.updateScore();
+            }
         });
 
         this.gameEngine.on('missileHit', e => {
@@ -63,6 +74,7 @@ export default class SpaaaceServerEngine extends ServerEngine {
 
             this.scoreData[ship.id] = {
                 kills: 0,
+                students: 0,
                 name: nameGenerator('general')
             };
             this.updateScore();

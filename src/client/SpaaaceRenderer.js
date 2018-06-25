@@ -7,6 +7,7 @@ import Utils from './../common/Utils';
 import Missile from '../common/Missile';
 import Ship from '../common/Ship';
 import Student from '../common/student';
+import University from '../common/university';
 
 
 /**
@@ -192,7 +193,7 @@ export default class SpaaaceRenderer extends Renderer {
                     sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                 }
 
-                if (objData instanceof Student) {
+                if (objData instanceof Student || objData instanceof University) {
                     sprite.rotation = 0;
                 }
 

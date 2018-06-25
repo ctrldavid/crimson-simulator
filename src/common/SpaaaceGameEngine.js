@@ -5,6 +5,7 @@ import GameEngine from 'lance/GameEngine';
 import Ship from './Ship';
 import Missile from './Missile';
 import Student from './student';
+import University from './university';
 import TwoVector from 'lance/serialize/TwoVector';
 
 export default class SpaaaceGameEngine extends GameEngine {
@@ -24,6 +25,7 @@ export default class SpaaaceGameEngine extends GameEngine {
         serializer.registerClass(Ship);
         serializer.registerClass(Missile);
         serializer.registerClass(Student);
+        serializer.registerClass(University);
     }
 
     initWorld() {
@@ -43,13 +45,16 @@ export default class SpaaaceGameEngine extends GameEngine {
             // let ships = collisionObjects.filter(o => o instanceof Ship);
             let ship = collisionObjects.find(o => o instanceof Ship);
             let student = collisionObjects.find(o => o instanceof Student);
+            let university = collisionObjects.find(o => o instanceof University);
 
 
-            if (!ship || !student)
-                return;
-
-            this.trace.info(() => `student pickup by ship=${ship.playerId}`);
-            this.emit('studentPickup', { student, ship });
+            if (ship && student) {
+                this.trace.info(() => `student pickup by ship=${ship.playerId}`);
+                this.emit('studentPickup', { student, ship });
+            } else if (ship && university) {
+                this.trace.info(() => `student dropoff by ship=${ship.playerId}`);
+                this.emit('studentDropoff', { university, ship });
+            }
 
             // let missile = collisionObjects.find(o => o instanceof Missile);
 
@@ -307,6 +312,32 @@ export default class SpaaaceGameEngine extends GameEngine {
             this.trace.trace(() => `studentId[${studentId}] destroyed`);
             this.removeObjectFromWorld(studentId);
         }
+    }
+    makeUniversity() {
+        let universityX = 0;
+        let universityY = 0;
+        for (let attempts = 1000; attempts > 0; attempts--) {
+            universityX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
+            universityY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
+            // Check the map to see if spawn point is valid
+            const pixel = this.ctx.getImageData(0|universityX, 0|universityY, 1, 1).data;
+            if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+                break;
+            }
+        }
+
+        let university = new University(this, null, {
+            position: new TwoVector(universityX, universityY),
+        });
+        // missile.velocity.copy(playerShip.velocity);
+
+        let obj = this.addObjectToWorld(university);
+
+        // if the object was added successfully to the game world, destroy the missile after some game ticks
+        // if (obj)
+        //     this.timer.add(30, this.destroyMissile, this, [obj.id]);
+
+        return university;
     }
     // at the end of the step, reduce the thrust for all objects
     reduceVisibleThrust(postStepEv) {
